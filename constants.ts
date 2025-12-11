@@ -6,17 +6,22 @@ export const STORAGE_KEYS = {
   LEAD: 'stepxstep_lead',
 } as const;
 
+// Default URLs (used as fallbacks if env vars not set)
+const DEFAULT_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/hBHyHal9k3XiJ0feyFi7/webhook-trigger/2c903d47-0a7a-4e02-b71b-b5a9961e6133';
+const DEFAULT_BOOKING_URL = 'https://link.stepxstepmarketing.com/widget/booking/qzpMOSmb5xPHXS36V16v';
+const DEFAULT_FORM_EMBED_SCRIPT = 'https://link.stepxstepmarketing.com/js/form_embed.js';
+
 // Environment variable getters with fallbacks
 export const getWebhookUrl = (): string => {
-  return import.meta.env.VITE_WEBHOOK_URL || '';
+  return import.meta.env.VITE_WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
 };
 
 export const getBookingUrl = (): string => {
-  return import.meta.env.VITE_BOOKING_URL || '';
+  return import.meta.env.VITE_BOOKING_URL || DEFAULT_BOOKING_URL;
 };
 
 export const getFormEmbedScript = (): string => {
-  return import.meta.env.VITE_FORM_EMBED_SCRIPT || '';
+  return import.meta.env.VITE_FORM_EMBED_SCRIPT || DEFAULT_FORM_EMBED_SCRIPT;
 };
 
 export const QUIZ_QUESTIONS: Question[] = [
