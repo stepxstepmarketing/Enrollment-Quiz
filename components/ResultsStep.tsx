@@ -10,44 +10,44 @@ interface ResultsStepProps {
 }
 
 const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, leadInfo }) => {
+  const calendarUrl = React.useMemo(() => {
+    const baseUrl = getBookingUrl();
+    const params = new URLSearchParams();
+
+    if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
+    if (leadInfo.lastName) params.append('last_name', leadInfo.lastName);
+    if (leadInfo.email) params.append('email', leadInfo.email);
+
+    if (leadInfo.phone) {
+      const cleanedPhone = leadInfo.phone.replace(/[^0-9+]/g, '');
+      params.append('phone', cleanedPhone);
+    }
+
+    if (leadInfo.businessName) params.append('company_name', leadInfo.businessName);
+
+    const url = `${baseUrl}?${params.toString()}`;
+    console.log('Calendar URL:', url);
+    console.log('Lead Info:', leadInfo);
+    return url;
+  }, [leadInfo]);
 
   useEffect(() => {
     const scriptUrl = getFormEmbedScript();
     if (!scriptUrl) return;
 
+    // Check if script already exists
+    const existingScript = document.querySelector(`script[src="${scriptUrl}"]`);
+    if (existingScript) return;
+
     const script = document.createElement('script');
     script.src = scriptUrl;
     script.type = "text/javascript";
-    script.async = true;
     document.body.appendChild(script);
 
     return () => {
-      try {
-        document.body.removeChild(script);
-      } catch (e) {
-        console.warn("Could not remove script", e);
-      }
+      // Don't remove the script on unmount - it may be needed
     };
   }, []);
-
-  const getCalendarUrl = () => {
-    const baseUrl = getBookingUrl();
-    const params = new URLSearchParams();
-    
-    if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
-    if (leadInfo.lastName) params.append('last_name', leadInfo.lastName);
-    if (leadInfo.email) params.append('email', leadInfo.email);
-    
-    if (leadInfo.phone) {
-      const cleanedPhone = leadInfo.phone.replace(/[^0-9+]/g, '');
-      params.append('phone', cleanedPhone);
-    }
-    
-    if (leadInfo.businessName) params.append('company_name', leadInfo.businessName);
-    params.append('ignore_contact_id_cache', '1');
-
-    return `${baseUrl}?${params.toString()}`;
-  };
 
   const getLevelColor = (level: string) => {
     if (level === 'Optimized') return 'from-green-500 to-emerald-600';
@@ -142,8 +142,7 @@ const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, lea
 
           <div className="bg-slate-50">
             <iframe
-              key={`${leadInfo.email}-${leadInfo.phone}`}
-              src={getCalendarUrl()}
+              src={calendarUrl}
               style={{ width: '100%', border: 'none', overflow: 'hidden', minHeight: '600px' }}
               scrolling="no"
               id="qzpMOSmb5xPHXS36V16v_booking"
