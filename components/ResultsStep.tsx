@@ -142,6 +142,7 @@ const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, lea
 
           <div className="bg-slate-50">
             <iframe
+              key={`${leadInfo.email}-${leadInfo.phone}`}
               src={getCalendarUrl()}
               style={{ width: '100%', border: 'none', overflow: 'hidden', minHeight: '600px' }}
               scrolling="no"
