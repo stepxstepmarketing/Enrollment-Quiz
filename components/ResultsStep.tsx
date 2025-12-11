@@ -10,26 +10,14 @@ interface ResultsStepProps {
 }
 
 const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, leadInfo }) => {
+  // Get query params from current page URL to pass to calendar
   const calendarUrl = React.useMemo(() => {
     const baseUrl = getBookingUrl();
-    const params = new URLSearchParams();
+    const pageParams = new URLSearchParams(window.location.search);
 
-    if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
-    if (leadInfo.lastName) params.append('last_name', leadInfo.lastName);
-    if (leadInfo.email) params.append('email', leadInfo.email);
-
-    if (leadInfo.phone) {
-      const cleanedPhone = leadInfo.phone.replace(/[^0-9+]/g, '');
-      params.append('phone', cleanedPhone);
-    }
-
-    if (leadInfo.businessName) params.append('company_name', leadInfo.businessName);
-
-    const url = `${baseUrl}?${params.toString()}`;
-    console.log('Calendar URL:', url);
-    console.log('Lead Info:', leadInfo);
-    return url;
-  }, [leadInfo]);
+    // Pass through the query params from the page URL
+    return `${baseUrl}?${pageParams.toString()}`;
+  }, []);
 
   useEffect(() => {
     const scriptUrl = getFormEmbedScript();

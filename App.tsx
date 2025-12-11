@@ -168,8 +168,18 @@ const App: React.FC = () => {
       localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(answers));
       localStorage.setItem(STORAGE_KEYS.LEAD, JSON.stringify(leadInfo));
 
-      // Update URL to /results for tracking pixels
-      window.history.pushState({}, '', '/results');
+      // Build URL with query params for calendar prefill
+      const params = new URLSearchParams();
+      if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
+      if (leadInfo.lastName) params.append('last_name', leadInfo.lastName);
+      if (leadInfo.email) params.append('email', leadInfo.email);
+      if (leadInfo.phone) {
+        const cleanedPhone = leadInfo.phone.replace(/[^0-9+]/g, '');
+        params.append('phone', cleanedPhone);
+      }
+
+      // Update URL to /results with query params for tracking pixels and calendar prefill
+      window.history.pushState({}, '', `/results?${params.toString()}`);
 
       setCurrentStep('results');
       window.scrollTo(0, 0);
