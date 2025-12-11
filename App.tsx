@@ -170,16 +170,17 @@ const App: React.FC = () => {
 
       // Build URL with query params for calendar prefill
       const params = new URLSearchParams();
-      if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
-      if (leadInfo.lastName) params.append('last_name', leadInfo.lastName);
-      if (leadInfo.email) params.append('email', leadInfo.email);
-      if (leadInfo.phone) {
-        const cleanedPhone = leadInfo.phone.replace(/[^0-9+]/g, '');
-        params.append('phone', cleanedPhone);
-      }
+      params.append('first_name', leadInfo.firstName || '');
+      params.append('last_name', leadInfo.lastName || '');
+      params.append('email', leadInfo.email || '');
+      params.append('phone', (leadInfo.phone || '').replace(/[^0-9+]/g, ''));
+
+      const resultsUrl = `/results?${params.toString()}`;
+      console.log('Navigating to:', resultsUrl);
+      console.log('Lead info:', leadInfo);
 
       // Update URL to /results with query params for tracking pixels and calendar prefill
-      window.history.pushState({}, '', `/results?${params.toString()}`);
+      window.history.pushState({}, '', resultsUrl);
 
       setCurrentStep('results');
       window.scrollTo(0, 0);
