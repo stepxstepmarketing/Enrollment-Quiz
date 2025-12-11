@@ -32,7 +32,6 @@ const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, lea
 
   const getCalendarUrl = () => {
     const baseUrl = getBookingUrl();
-    if (!baseUrl) return '';
     const params = new URLSearchParams();
     
     if (leadInfo.firstName) params.append('first_name', leadInfo.firstName);
@@ -141,15 +140,14 @@ const ResultsStep: React.FC<ResultsStepProps> = ({ results, recommendations, lea
             </p>
           </div>
 
-          <div className="p-0 bg-slate-50">
-            <iframe 
-              key={getCalendarUrl()} 
+          <div className="bg-slate-50">
+            <iframe
               src={getCalendarUrl()}
-              style={{ width: '100%', border: 'none', overflow: 'hidden', minHeight: '500px' }} 
-              scrolling="no" 
-              id="qzpMOSmb5xPHXS36V16v_1764921531056"
+              style={{ width: '100%', border: 'none', overflow: 'hidden', minHeight: '600px' }}
+              scrolling="no"
+              id="qzpMOSmb5xPHXS36V16v_booking"
               title="Booking Calendar"
-            ></iframe>
+            />
           </div>
         </div>
 
